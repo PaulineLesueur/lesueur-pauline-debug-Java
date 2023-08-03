@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.io.IOException;
 
 public class AnalyticsCounter {
 	private ISymptomReader reader;
@@ -30,9 +31,17 @@ public class AnalyticsCounter {
 		return symptomsCount;
 	}
 
+	public void writeSymptoms(Map<String, Integer> symptoms) {
+		try {
+			writer.writeSymptoms(symptoms);
+		} catch(IOException e) {
+			e.printStackTrace();
+		}
+	}
+
 	public static void main(String args[]) throws Exception {
 		ISymptomReader reader = new ReadSymptomDataFromFile("symptoms.txt");
-		ISymptomWriter writer = null;
+		ISymptomWriter writer = new WriteSymptomDataToFile("result.out");
 
 		AnalyticsCounter analyticsCounter = new AnalyticsCounter(reader, writer);
 		List<String> symptomsList = analyticsCounter.getSymptoms();
@@ -40,41 +49,6 @@ public class AnalyticsCounter {
 		for (Map.Entry<String, Integer> pair : symptomsCounted.entrySet()) {
 			System.out.println(String.format("%s : %s", pair.getKey(), pair.getValue()));   
 		}
+		analyticsCounter.writeSymptoms(symptomsCounted);
 	}
-	/*
-	private static int headacheCount = 0;
-	private static int rashCount = 0;
-	private static int pupilCount = 0;
-	
-	public static void main(String args[]) throws Exception {
-		// first get input
-		BufferedReader reader = new BufferedReader (new FileReader("symptoms.txt"));
-		String line = reader.readLine();
-
-		int i = 0;
-		int headCount = 0;
-		while (line != null) {
-			i++;
-			System.out.println("symptom from file: " + line);
-			if (line.equals("headache")) {
-				headCount++;
-				System.out.println("number of headaches: " + headCount);
-			}
-			else if (line.equals("rush")) {
-				rashCount++;
-			}
-			else if (line.contains("pupils")) {
-				pupilCount++;
-			}
-
-			line = reader.readLine();	// get another symptom
-		}
-		
-		// next generate output
-		FileWriter writer = new FileWriter ("result.out");
-		writer.write("headache: " + headacheCount + "\n");
-		writer.write("rash: " + rashCount + "\n");
-		writer.write("dialated pupils: " + pupilCount + "\n");
-		writer.close();
-	}*/
 }

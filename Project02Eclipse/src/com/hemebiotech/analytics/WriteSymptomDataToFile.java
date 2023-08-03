@@ -7,21 +7,18 @@ import java.util.Map;
 import java.util.TreeMap;
 
 public class WriteSymptomDataToFile implements ISymptomWriter {
-    private Map<String, Integer> filepath;
+    private String filepath;
 
-    public WriteSymptomDataToFile(Map<String, Integer> symptoms) {
-        this.filepath = symptoms;
+    public WriteSymptomDataToFile(String filepath) {
+        this.filepath = filepath;
     }
 
     @Override
-    public void writeSymptoms() throws IOException {
-        TreeMap<String, Integer> results = new TreeMap<String, Integer>();
-        results.putAll(filepath);
-
-        BufferedWriter writer = new BufferedWriter(new FileWriter ("result.out"));
+    public void writeSymptoms(Map<String, Integer> results) throws IOException {
+        BufferedWriter writer = new BufferedWriter(new FileWriter (filepath));
             try {
                 for (Map.Entry<String, Integer> entry : results.entrySet()) {
-                    writer.write(entry.getKey() + ' : ' + entry.getValue());
+                    writer.write(entry.getKey() + " : " + entry.getValue());
                     writer.newLine();
                 }
                 writer.close();
