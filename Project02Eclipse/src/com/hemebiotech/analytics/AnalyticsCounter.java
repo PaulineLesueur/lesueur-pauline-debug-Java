@@ -1,6 +1,5 @@
 package com.hemebiotech.analytics;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -19,6 +18,9 @@ public class AnalyticsCounter {
 		return reader.getSymptoms();
 	}
 
+	/**
+	 * Count the occurrences of each symptom and put them in a TreeMap
+	 */
 	public Map<String, Integer> countSymptoms(List<String> symptoms) {
 		Map<String, Integer> symptomsCount = new TreeMap<>();
 		for(String symptom : symptoms) {
@@ -42,13 +44,15 @@ public class AnalyticsCounter {
 	public static void main(String args[]) throws Exception {
 		ISymptomReader reader = new ReadSymptomDataFromFile("symptoms.txt");
 		ISymptomWriter writer = new WriteSymptomDataToFile("result.out");
-
 		AnalyticsCounter analyticsCounter = new AnalyticsCounter(reader, writer);
+
+		/**
+		 * Call the methods and print a success message
+		 */
 		List<String> symptomsList = analyticsCounter.getSymptoms();
 		Map<String, Integer> symptomsCounted = analyticsCounter.countSymptoms(symptomsList);
-		for (Map.Entry<String, Integer> pair : symptomsCounted.entrySet()) {
-			System.out.println(String.format("%s : %s", pair.getKey(), pair.getValue()));   
-		}
 		analyticsCounter.writeSymptoms(symptomsCounted);
+
+		System.out.println("The results of the data extraction is located in the result.out file");
 	}
 }
